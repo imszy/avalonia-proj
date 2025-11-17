@@ -1,0 +1,233 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaDemo.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+        x:Class="AvaloniaDemo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Avalonia Demo - 现代化桌面应用"
+        Width="1200" Height="700"
+        MinWidth="800" MinHeight="600"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#F5F5F5"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button.modern">
+            <Setter Property="Background" Value="#3B82F6"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.modern:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#2563EB"/>
+        </Style>
+        <Style Selector="Button.modern:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#1D4ED8"/>
+        </Style>
+
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+        </Style>
+
+        <Style Selector="Border.card:pointerover">
+            <Setter Property="BoxShadow" Value="0 4 16 0 #20000000"/>
+        </Style>
+
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+        </Style>
+
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+        </Style>
+
+        <Style Selector="TextBlock.card-title">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+        </Style>
+
+        <Style Selector="TextBlock.card-value">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Custom Title Bar -->
+        <Border Grid.Row="0" Background="#FFFFFF" Padding="20,15" 
+                IsHitTestVisible="False" BoxShadow="0 1 3 0 #10000000">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Column="0" Text="🚀" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Grid.Column="1" Text="Avalonia Demo" 
+                          FontSize="16" FontWeight="SemiBold" 
+                          VerticalAlignment="Center" Foreground="#1F2937"/>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" IsHitTestVisible="True">
+                    <Button Classes="modern" Command="{Binding RefreshCommand}" 
+                            Background="#10B981" Padding="12,6">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="🔄" FontSize="14"/>
+                            <TextBlock Text="刷新" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="modern" Command="{Binding SettingsCommand}" 
+                            Background="#8B5CF6" Padding="12,6">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="⚙️" FontSize="14"/>
+                            <TextBlock Text="设置" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" Padding="30,20">
+            <StackPanel Spacing="30">
+                <!-- Welcome Section -->
+                <Border Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="{Binding Greeting}" Classes="title"/>
+                        <TextBlock Text="这是一个使用 Avalonia UI 构建的现代化桌面应用程序示例" 
+                                  Classes="subtitle"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stats Cards -->
+                <ItemsControl ItemsSource="{Binding CardItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="4" HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Classes="card" Margin="0,0,15,0">
+                                <StackPanel Spacing="12">
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <Border Grid.Column="0" 
+                                                Width="48" Height="48" 
+                                                CornerRadius="24">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{Binding Color}" Opacity="0.1"/>
+                                            </Border.Background>
+                                            <TextBlock Text="{Binding Icon}" 
+                                                      FontSize="24" 
+                                                      HorizontalAlignment="Center" 
+                                                      VerticalAlignment="Center"/>
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Text="{Binding Title}" Classes="card-title"/>
+                                    <TextBlock Text="{Binding Value}" Classes="card-value"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Tabs Section -->
+                <Border Classes="card">
+                    <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+                        <TabItem Header="📊 数据面板">
+                            <StackPanel Spacing="20" Margin="0,20,0,0">
+                                <TextBlock Text="数据统计" FontSize="18" FontWeight="SemiBold"/>
+                                <ItemsControl ItemsSource="{Binding StatItems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F9FAFB" 
+                                                   CornerRadius="8" 
+                                                   Padding="16,12" 
+                                                   Margin="0,0,0,10">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <TextBlock Grid.Column="0" 
+                                                              Text="{Binding Label}" 
+                                                              FontSize="14" 
+                                                              VerticalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="1" 
+                                                              Text="{Binding Value}" 
+                                                              FontSize="18" 
+                                                              FontWeight="Bold" 
+                                                              Foreground="#3B82F6"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="📝 内容管理">
+                            <StackPanel Spacing="15" Margin="0,20,0,0">
+                                <TextBlock Text="内容管理功能" FontSize="18" FontWeight="SemiBold"/>
+                                <TextBlock Text="这里可以添加内容管理相关的功能..." 
+                                          Foreground="#6B7280"/>
+                                <Border Background="#EFF6FF" 
+                                       BorderBrush="#3B82F6" 
+                                       BorderThickness="1" 
+                                       CornerRadius="8" 
+                                       Padding="16">
+                                    <TextBlock Text="💡 提示：您可以在这里扩展更多功能，如文件管理、数据编辑等。" 
+                                              Foreground="#1E40AF" 
+                                              TextWrapping="Wrap"/>
+                                </Border>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="ℹ️ 关于">
+                            <StackPanel Spacing="15" Margin="0,20,0,0">
+                                <TextBlock Text="关于应用" FontSize="18" FontWeight="SemiBold"/>
+                                <TextBlock TextWrapping="Wrap" Foreground="#6B7280">
+                                    这是一个基于 Avalonia UI 11.0 构建的现代化跨平台桌面应用程序。
+                                </TextBlock>
+                                <Border Background="#F9FAFB" CornerRadius="8" Padding="16">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="✨ 特性" FontWeight="SemiBold"/>
+                                        <TextBlock Text="• 现代化的 Fluent Design 界面"/>
+                                        <TextBlock Text="• 响应式布局设计"/>
+                                        <TextBlock Text="• 支持 Windows, macOS, Linux"/>
+                                        <TextBlock Text="• GitHub Actions 自动构建"/>
+                                        <TextBlock Text="• ReactiveUI MVVM 架构"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#FFFFFF" 
+                Padding="20,10" 
+                BorderBrush="#E5E7EB" 
+                BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" 
+                          Text="{Binding StatusMessage}" 
+                          FontSize="12" 
+                          Foreground="#6B7280" 
+                          VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" 
+                          Text="Avalonia UI v11.0" 
+                          FontSize="12" 
+                          Foreground="#9CA3AF" 
+                          VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+
