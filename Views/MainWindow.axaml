@@ -6,7 +6,6 @@
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
         x:Class="AvaloniaDemo.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
         Title="Avalonia Demo - 现代化桌面应用"
         Width="1200" Height="700"
         MinWidth="800" MinHeight="600"
